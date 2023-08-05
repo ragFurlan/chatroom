@@ -2,32 +2,32 @@
 package chat_usecase
 
 import (
+	user_usecase "chatroom/internal/app/usecases/user"
 	"chatroom/internal/gateways"
 	"fmt"
 )
 
 type ChatUseCase struct {
-	//MessageRepository MessageRepository
-	//UserRepository    UserRepository
-	BotGateway gateways.BotGateway
+	UserUsecase user_usecase.UserUseCase
+	BotGateway  gateways.BotGateway
 	//PubSubProducer    gateways.PubSubProducer
+	//MessageRepository MessageRepository
 }
 
-func NewChatUseCase(botGateway gateways.BotGateway) *ChatUseCase {
-	//func NewChatUseCase(messageRepo MessageRepository, userRepo UserRepository, botGateway gateways.BotGateway, pubSubProducer gateways.PubSubProducer) *ChatUseCase {
+func NewChatUseCase(botGateway gateways.BotGateway, userUsecase user_usecase.UserUseCase) *ChatUseCase {
 	return &ChatUseCase{
-		//MessageRepository: messageRepo,
-		//UserRepository:    userRepo,
-		BotGateway: botGateway,
+		UserUsecase: userUsecase,
+		BotGateway:  botGateway,
 		//PubSubProducer:    pubSubProducer,
+		//MessageRepository: messageRepo,
 	}
 }
 
 func (uc *ChatUseCase) PostMessage(userID int, stockCode string) error {
-	// user, err := uc.UserRepository.GetUserByID(userID)
-	// if err != nil {
-	// 	return err
-	// }
+	_, err := uc.UserUsecase.GetUserName(userID)
+	if err != nil {
+		return err
+	}
 
 	// message := entities.Message{
 	// 	User:      user.Username,

@@ -1,16 +1,16 @@
 package main
 
 import (
-	chat "chatroom/internal/app/usecases/chat"
+	chatUsecase "chatroom/internal/app/usecases/chat"
+	userUsecase "chatroom/internal/app/usecases/user"
 	controller "chatroom/internal/controllers/http/handlers"
-	repository "chatroom/internal/repositories"
+	repository "chatroom/internal/gateways/repositories"
 	"fmt"
 	"net/http"
 	"os"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-
 )
 
 var (
@@ -20,8 +20,16 @@ var (
 func main() {
 	urlStock := os.Getenv("URL_STOCK")
 
+	// User
+	userGateway := repository.NewUserGateway()
+	userUseCase := userUsecase.NewUserUseCase(userGateway)
+
+	// Bot
 	stockBotRepository := repository.NewStockBotGateway(urlStock)
-	chatUsecase := chat.NewChatUseCase(stockBotRepository)
+
+	// Chat
+	chatUsecase := chatUsecase.NewChatUseCase(stockBotRepository, *userUseCase)
+
 	handlerChat = controller.NewHTTPHandler(*chatUsecase)
 	StartServer()
 
