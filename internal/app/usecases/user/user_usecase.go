@@ -5,11 +5,10 @@ import (
 )
 
 type UserUseCase struct {
-	UserGateway gateways.UserGateway
+	UserGateway gateway.UserGateway
 }
 
-func NewUserUseCase(userGateway gateways.UserGateway) *UserUseCase {
-
+func NewUserUseCase(userGateway gateway.UserGateway) *UserUseCase {
 	return &UserUseCase{
 		UserGateway: userGateway,
 	}

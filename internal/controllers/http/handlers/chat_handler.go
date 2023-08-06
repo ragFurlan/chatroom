@@ -25,13 +25,16 @@ func (h *HTTPHandler) PostMessageHandler(w http.ResponseWriter, r *http.Request)
 		http.Error(w, "Invalid user ID", http.StatusBadRequest)
 		return
 	}
+
+	room := r.Header.Get("Room")
+
 	vars := mux.Vars(r)
 	stockCode, ok := vars["stock_code"]
 	if !ok {
 		http.Error(w, "Id is missing in parameters", http.StatusMethodNotAllowed)
 	}
 
-	err = h.ChatUseCase.PostMessage(userID, stockCode)
+	err = h.ChatUseCase.PostMessage(userID, room, stockCode)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -40,19 +43,4 @@ func (h *HTTPHandler) PostMessageHandler(w http.ResponseWriter, r *http.Request)
 	w.WriteHeader(http.StatusNoContent)
 }
 
-// func (h *HTTPHandler) GetLatestMessagesHandler(w http.ResponseWriter, r *http.Request) {
-// 	messages, err := h.ChatUseCase.GetLatestMessages()
-// 	if err != nil {
-// 		http.Error(w, "Error getting messages", http.StatusInternalServerError)
-// 		return
-// 	}
-
-// 	response, err := json.Marshal(messages)
-// 	if err != nil {
-// 		http.Error(w, "Error encoding response", http.StatusInternalServerError)
-// 		return
-// 	}
-
-// 	w.Header().Set("Content-Type", "application/json")
-// 	w.Write(response)
-// }
+// room

@@ -4,6 +4,7 @@ import (
 	chatUsecase "chatroom/internal/app/usecases/chat"
 	userUsecase "chatroom/internal/app/usecases/user"
 	controller "chatroom/internal/controllers/http/handlers"
+	producer "chatroom/internal/gateways/producers"
 	repository "chatroom/internal/gateways/repositories"
 	"fmt"
 	"net/http"
@@ -15,6 +16,7 @@ import (
 
 var (
 	handlerChat *controller.HTTPHandler
+	sub         <-chan string
 )
 
 func main() {
@@ -27,8 +29,11 @@ func main() {
 	// Bot
 	stockBotRepository := repository.NewStockBotGateway(urlStock)
 
+	// pub/sub
+	pubSubProducer := producer.NewPubSub()
+
 	// Chat
-	chatUsecase := chatUsecase.NewChatUseCase(stockBotRepository, *userUseCase)
+	chatUsecase := chatUsecase.NewChatUseCase(stockBotRepository, *userUseCase, pubSubProducer)
 
 	handlerChat = controller.NewHTTPHandler(*chatUsecase)
 	StartServer()
