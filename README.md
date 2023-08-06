@@ -23,6 +23,19 @@ docker build -t classroom .
 docker run -p 8080:8080 classroom
 ```
 
+
+Rodar web localmente 
+```
+ng serve
+```
+
+```
+
+docker build -t classroom-web-app .
+
+docker run -p 5000:80 --name classroom-web classroom-web-app
+```
+
 ### install if necessary
 go get github.com/lib/pq
 

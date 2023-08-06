@@ -1,0 +1,43 @@
+<!-- <div class="container">
+  <div class="title">Chat App</div>
+  <label for="userCombo">Escolha um usuário:</label>
+  <select id="userCombo" [(ngModel)]="selectedUser">
+    <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
+  </select>
+</div>
+
+<div>
+  <label for="roomCombo">Escolha uma sala:</label>
+  <select id="roomCombo" [(ngModel)]="selectedRoom">
+    <option *ngFor="let room of rooms" [value]="room">{{ room }}</option>
+  </select>
+</div>
+
+<button class="send-button" (click)="updateMessages()">Atualizar Mensagens</button>
+<div >
+  <ul>
+    <li *ngFor="let message of messages">{{ message }}</li>
+  </ul>
+</div> -->
+
+<div class="container">
+  <div class="title">CHAT ROOM</div>
+  <form class="form">
+    <select class="select" id="userCombo" [(ngModel)]="selectedUser">
+      <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
+    </select>    
+    <select class="select" id="roomSelect">
+      <option *ngFor="let room of rooms" [value]="room">{{ room }}</option>
+    </select>
+    <button class="button" id="updateButton">Update</button>
+  </form>
+  <div class="send-button">
+    <input type="text" class="message-input" id="messageInput" placeholder="Enter your message...">
+    <button class="button" id="sendMessageButton">Send</button>
+  </div>
+  <div class="messages">
+    <!-- Área de exibição de mensagens -->
+  </div>  
+  <div class="footer">
+  </div>
+</div>
