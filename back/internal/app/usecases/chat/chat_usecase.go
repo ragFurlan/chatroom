@@ -1,4 +1,3 @@
-// chat_usecase.go
 package chat_usecase
 
 import (
