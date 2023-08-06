@@ -2,6 +2,7 @@ package handler
 
 import (
 	chat_usecase "chatroom/internal/app/usecases/chat"
+	"encoding/json"
 	"net/http"
 	"strconv"
 
@@ -40,7 +41,33 @@ func (h *HTTPHandler) PostMessageHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	w.WriteHeader(http.StatusNoContent)
+	response := struct {
+		Message string `json:"message"`
+	}{
+		Message: "Message posted with success",
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
 }
 
-// room
+func (h *HTTPHandler) GetMessages(w http.ResponseWriter, r *http.Request) {
+	userIDStr := r.Header.Get("UserID")
+	_, err := strconv.Atoi(userIDStr)
+	if err != nil {
+		http.Error(w, "Invalid user ID", http.StatusBadRequest)
+		return
+	}
+
+	room := r.Header.Get("Room")
+
+	messages, err := h.ChatUseCase.GetMessages(room)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(messages)
+
+}

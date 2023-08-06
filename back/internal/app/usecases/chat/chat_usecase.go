@@ -7,26 +7,29 @@ import (
 	gateway "chatroom/internal/gateways"
 	"encoding/json"
 	"fmt"
-	"time"
 )
 
-var shapeTime = "02/01/2006 15:04:05"
+var (
+	shapeTime       = "02/01/2006 15:04:05"
+	limitMessageGet = 50
+)
 
 type ChatUseCase struct {
-	UserUsecase    user_usecase.UserUseCase
-	BotGateway     gateway.BotGateway
-	PubSubProducer gateway.PubSubGateway
-	//MessageRepository MessageRepository
+	UserUsecase       user_usecase.UserUseCase
+	BotGateway        gateway.BotGateway
+	PubSubProducer    gateway.PubSubGateway
+	MessageRepository gateway.MessageGateway
 }
 
 func NewChatUseCase(botGateway gateway.BotGateway,
 	userUsecase user_usecase.UserUseCase,
-	pubSubProducer gateway.PubSubGateway) *ChatUseCase {
+	pubSubProducer gateway.PubSubGateway,
+	messageRepository gateway.MessageGateway) *ChatUseCase {
 	return &ChatUseCase{
-		UserUsecase:    userUsecase,
-		BotGateway:     botGateway,
-		PubSubProducer: pubSubProducer,
-		//MessageRepository: messageRepo,
+		UserUsecase:       userUsecase,
+		BotGateway:        botGateway,
+		PubSubProducer:    pubSubProducer,
+		MessageRepository: messageRepository,
 	}
 }
 
@@ -51,9 +54,9 @@ func (uc *ChatUseCase) PostMessage(userID int, room, stockCode string) error {
 	}
 
 	message := entity.Message{
-		User:      userName,
-		Message:   fmt.Sprintf("%s quote is $%v per share", stockCode, value),
-		Timestamp: time.Now(),
+		UserName: userName,
+		Message:  fmt.Sprintf("%s quote is $%v per share", stockCode, value),
+		Room:     room,
 	}
 
 	jsonBytes, err := json.Marshal(message)
@@ -63,53 +66,47 @@ func (uc *ChatUseCase) PostMessage(userID int, room, stockCode string) error {
 
 	uc.PubSubProducer.Publish(room, string(jsonBytes))
 
-	// message := entity.Message{
-	// 	User:      name,
-	// 	Message:   fmt.Sprintf("%s.US quote is $%.2f per share", stockCode, value),
-	// 	Timestamp: time.Now(),
-	// }
-
-	// 	if err := uc.MessageRepository.SaveMessage(&message); err != nil {
-	// 	return err
-	// }
-
 	return nil
+}
+
+func (uc *ChatUseCase) GetMessages(room string) ([]entity.Message, error) {
+	subscribers, found := uc.PubSubProducer.GetSubscribers(room)
+	if !found {
+		return nil, fmt.Errorf("There are no posts in this topic")
+	}
+
+	err := uc.readMessages(subscribers)
+	if err != nil {
+		return nil, err
+	}
+
+	messages, err := uc.MessageRepository.GetLatestMessages(room, limitMessageGet)
+	if err != nil {
+		return nil, fmt.Errorf("Error add message to database: %v", err)
+	}
+
+	return messages, nil
 
 }
 
-// func (uc *ChatUseCase) GetMessages(room string) ([]string, error) {
-// 	subscribers, found := uc.PubSubProducer.GetSubscribers(room)
-// 	if !found {
-// 		return nil, fmt.Errorf("There are no posts in this topic")
-// 	}
+func (uc *ChatUseCase) readMessages(subscribers []chan string) error {
+	var message entity.Message
+	for _, ch := range subscribers {
+		select {
+		case jsonMessage := <-ch:
+			err := json.Unmarshal([]byte(jsonMessage), &message)
+			if err != nil {
+				return fmt.Errorf("Error reading messages: %v", err)
+			}
 
-// 	err := uc.readMessages(subscribers)
-// 	if err != nil {
-// 		return nil, err
-// 	}
+			err = uc.MessageRepository.CreateMessage(&message)
+			if err != nil {
+				return fmt.Errorf("Error add message to database: %v", err)
+			}
+		default:
+			continue
+		}
+	}
 
-// 	// Retornar do MySQL todas as mensagens
-// 	return nil, nil
-
-// }
-
-// func (uc *ChatUseCase) readMessages(subscribers []chan string) error {
-// 	var message entity.Message
-
-// 	for _, subscription := range subscribers {
-// 		jsonMessage := <-subscription
-// 		err := json.Unmarshal([]byte(jsonMessage), &message)
-// 		if err != nil {
-// 			return fmt.Errorf("Error reading messages: %v", err)
-// 		}
-
-// 		// TODO: salvar a mensagem no mysql
-
-// 		// time := message.Timestamp.Format(shapeTime)
-// 		// msg := fmt.Sprintf("%s - %s - %s", message.User, time, message.Message)
-// 		// messages := append(messages, msg)
-
-// 	}
-
-// 	return nil
-// }
+	return nil
+}

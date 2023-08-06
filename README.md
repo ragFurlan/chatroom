@@ -23,3 +23,8 @@ docker build -t classroom .
 docker run -p 8080:8080 classroom
 ```
 
+### install if necessary
+go get github.com/lib/pq
+
+go get -u github.com/golang-migrate/migrate/v4/cmd/migrate
+

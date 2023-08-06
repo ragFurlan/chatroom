@@ -46,4 +46,5 @@ func (ps *PubSub) GetSubscribers(room string) ([]chan string, bool) {
 		return nil, false
 	}
 	return subscribers, true
+
 }
