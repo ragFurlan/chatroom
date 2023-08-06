@@ -1,7 +1,7 @@
 package user_usecase
 
 import (
-	"chatroom/internal/gateways"
+	gateway "chatroom/internal/gateways"
 )
 
 type UserUseCase struct {

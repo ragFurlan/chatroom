@@ -1,7 +1,7 @@
 package repository
 
 import (
-	entity "chatroom/Internal/entities"
+	entity "chatroom/internal/entities"
 	"fmt"
 )
 

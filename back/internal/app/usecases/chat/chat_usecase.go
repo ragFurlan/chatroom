@@ -2,8 +2,8 @@
 package chat_usecase
 
 import (
-	entity "chatroom/Internal/entities"
 	user_usecase "chatroom/internal/app/usecases/user"
+	entity "chatroom/internal/entities"
 	gateway "chatroom/internal/gateways"
 	"encoding/json"
 	"fmt"
@@ -77,39 +77,39 @@ func (uc *ChatUseCase) PostMessage(userID int, room, stockCode string) error {
 
 }
 
-func (uc *ChatUseCase) GetMessages(room string) ([]string, error) {
-	subscribers, found := uc.PubSubProducer.GetSubscribers(room)
-	if !found {
-		return nil, fmt.Errorf("There are no posts in this topic")
-	}
+// func (uc *ChatUseCase) GetMessages(room string) ([]string, error) {
+// 	subscribers, found := uc.PubSubProducer.GetSubscribers(room)
+// 	if !found {
+// 		return nil, fmt.Errorf("There are no posts in this topic")
+// 	}
 
-	err := uc.readMessages(subscribers)
-	if err != nil {
-		return nil, err
-	}
+// 	err := uc.readMessages(subscribers)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	// Retornar do MySQL todas as mensagens
-	return nil, nil
+// 	// Retornar do MySQL todas as mensagens
+// 	return nil, nil
 
-}
+// }
 
-func (uc *ChatUseCase) readMessages(subscribers []chan string) error {
-	var message entity.Message
+// func (uc *ChatUseCase) readMessages(subscribers []chan string) error {
+// 	var message entity.Message
 
-	for _, subscription := range subscribers {
-		jsonMessage := <-subscription
-		err := json.Unmarshal([]byte(jsonMessage), &message)
-		if err != nil {
-			return fmt.Errorf("Error reading messages: %v", err)
-		}
+// 	for _, subscription := range subscribers {
+// 		jsonMessage := <-subscription
+// 		err := json.Unmarshal([]byte(jsonMessage), &message)
+// 		if err != nil {
+// 			return fmt.Errorf("Error reading messages: %v", err)
+// 		}
 
-		// TODO: salvar a mensagem no mysql
+// 		// TODO: salvar a mensagem no mysql
 
-		// time := message.Timestamp.Format(shapeTime)
-		// msg := fmt.Sprintf("%s - %s - %s", message.User, time, message.Message)
-		// messages := append(messages, msg)
+// 		// time := message.Timestamp.Format(shapeTime)
+// 		// msg := fmt.Sprintf("%s - %s - %s", message.User, time, message.Message)
+// 		// messages := append(messages, msg)
 
-	}
+// 	}
 
-	return nil
-}
+// 	return nil
+// }

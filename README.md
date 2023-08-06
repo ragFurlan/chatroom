@@ -15,3 +15,11 @@ TODO:
 - Adicionar Makefile"
 - adicionar na tela a possibilidade de escolher até 3 salas para entrar  que vai ser o nome do tópico
 
+
+### run the project with Docker
+```
+docker build -t classroom .
+
+docker run -p 8080:8080 classroom
+```
+
