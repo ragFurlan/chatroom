@@ -20,6 +20,11 @@ func NewMessageRepository(db *sql.DB) *MessageRepository {
 }
 
 func (r *MessageRepository) CreateMessage(message *entity.Message) error {
+	m := *message
+	if m.UserName == "" || m.Message == "" || m.Room == "" {
+		return fmt.Errorf("There are fields missing")
+	}
+
 	insertQuery := fmt.Sprintf("INSERT INTO messages (userName, message, room, timestamp) VALUES ('%s', '%s', '%s', CURRENT_TIMESTAMP)",
 		message.UserName, message.Message, message.Room)
 	_, err := r.db.Exec(insertQuery)

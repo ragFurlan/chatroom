@@ -1,6 +1,8 @@
 package producer
 
-import "sync"
+import (
+	"sync"
+)
 
 type PubSub struct {
 	subscribers map[string][]chan string
@@ -14,6 +16,9 @@ func NewPubSub() *PubSub {
 }
 
 func (ps *PubSub) Subscribe(topic string) chan string {
+	if topic == "" {
+		return nil
+	}
 	ps.mu.Lock()
 	defer ps.mu.Unlock()
 

@@ -77,39 +77,3 @@ func registerRoutes(handlerChat *controller.HTTPHandler) *mux.Router {
 
 	return router
 }
-
-// func startServer() {
-// 	r := registerRoutes(handlerChat)
-
-// 	c := cors.New(cors.Options{
-// 		AllowedOrigins: []string{"http://localhost:4200"},
-// 		AllowedMethods: []string{"GET", "POST", "OPTIONS", "PUT", "DELETE"},
-// 		AllowedHeaders: []string{"Content-Type"},
-// 		Debug:          true,
-// 	})
-
-// 	handler := c.Handler(r)
-
-// 	handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-// 		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
-// 		handler.ServeHTTP(w, r)
-// 	})
-
-// 	http.Handle("/", handler)
-// 	http.ListenAndServe(":8080", nil)
-// }
-
-// func startServer() {
-// 	r := registerRoutes(handlerChat)
-
-// 	cors := handlers.CORS(
-// 		handlers.AllowedOrigins([]string{"http://localhost:4200"}), // Permitir o domínio do Angular
-// 		handlers.AllowedMethods([]string{"GET", "POST", "OPTIONS"}),
-// 		handlers.AllowedHeaders([]string{"Content-Type"}),
-// 	)
-
-// 	http.Handle("/", cors(r))
-
-// 	// Iniciar o servidor
-// 	http.ListenAndServe(":8080", nil)
-// }
