@@ -36,7 +36,7 @@ func (r *MessageRepository) GetLatestMessages(room string, limit int) ([]entity.
 	var messages []entity.Message
 	for rows.Next() {
 		var message entity.Message
-		err := rows.Scan(&message.ID, &message.UserName, &message.Room, &message.Message, &message.Timestamp)
+		err := rows.Scan(&message.ID, &message.UserName, &message.Message, &message.Room, &message.Timestamp)
 		if err != nil {
 			return nil, err
 		}

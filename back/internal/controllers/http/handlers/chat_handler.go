@@ -4,7 +4,6 @@ import (
 	chat_usecase "chatroom/internal/app/usecases/chat"
 	"encoding/json"
 	"net/http"
-	"strconv"
 
 	"github.com/gorilla/mux"
 )
@@ -20,14 +19,16 @@ func NewHTTPHandler(chatUseCase chat_usecase.ChatUseCase) *HTTPHandler {
 }
 
 func (h *HTTPHandler) PostMessageHandler(w http.ResponseWriter, r *http.Request) {
-	userIDStr := r.Header.Get("UserID")
-	userID, err := strconv.Atoi(userIDStr)
-	if err != nil {
-		http.Error(w, "Invalid user ID", http.StatusBadRequest)
-		return
+	var requestBody struct {
+		UserID int    `json:"userId"`
+		Room   string `json:"room"`
 	}
 
-	room := r.Header.Get("Room")
+	err := json.NewDecoder(r.Body).Decode(&requestBody)
+	if err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
 
 	vars := mux.Vars(r)
 	stockCode, ok := vars["stock_code"]
@@ -35,7 +36,7 @@ func (h *HTTPHandler) PostMessageHandler(w http.ResponseWriter, r *http.Request)
 		http.Error(w, "Id is missing in parameters", http.StatusMethodNotAllowed)
 	}
 
-	err = h.ChatUseCase.PostMessage(userID, room, stockCode)
+	err = h.ChatUseCase.PostMessage(requestBody.UserID, requestBody.Room, stockCode)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -48,26 +49,29 @@ func (h *HTTPHandler) PostMessageHandler(w http.ResponseWriter, r *http.Request)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	json.NewEncoder(w).Encode(response)
 }
 
 func (h *HTTPHandler) GetMessages(w http.ResponseWriter, r *http.Request) {
-	userIDStr := r.Header.Get("UserID")
-	_, err := strconv.Atoi(userIDStr)
+	var requestBody struct {
+		Room string `json:"room"`
+	}
+
+	err := json.NewDecoder(r.Body).Decode(&requestBody)
 	if err != nil {
-		http.Error(w, "Invalid user ID", http.StatusBadRequest)
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
 
-	room := r.Header.Get("Room")
-
-	messages, err := h.ChatUseCase.GetMessages(room)
+	messages, err := h.ChatUseCase.GetMessages(requestBody.Room)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	json.NewEncoder(w).Encode(messages)
 
 }

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../services/api.service';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ApiService, Message } from '../services/api.service';
 
 @Component({
   selector: 'app-chat',
@@ -15,26 +15,33 @@ export class ChatComponent implements OnInit {
   
   rooms = ['ROOM1', 'ROOM2'];
   selectedUser: number = this.users[0].id; 
-  selectedRoom: string = this.rooms[0];    
-  messages: string[] = [];
+  selectedRoom: string = this.rooms[0]; 
+  formattedMessages: string[] = [];
 
   constructor(private apiService: ApiService) {}
+  
+  @ViewChild('messageInput') messageInputRef!: ElementRef<HTMLInputElement>;
 
   ngOnInit(): void {
-    this.updateMessages();
-  }
+    //this.updateMessages();
+  } 
 
   updateMessages(): void {
-    this.apiService.getMessages(this.selectedUser, this.selectedRoom)
-      .subscribe((messages: string[]) => {
-        this.messages = messages;
+    this.apiService.getMessages(this.selectedRoom)    
+      .subscribe((messages: Message[]) => {
+        this.formattedMessages = messages.map(message => {
+          const timestamp = new Date(message.Timestamp).toLocaleString();
+          return `${timestamp} - ${message.UserName} - ${message.Message}`;
+        });
       });
   }
 
   sendMessage(message: string): void {
     this.apiService.postMessage(this.selectedUser, this.selectedRoom, message)
       .subscribe(() => {
+        debugger;
         this.updateMessages();
+        this.messageInputRef.nativeElement.value = '';
       });
   }
 }
