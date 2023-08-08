@@ -20,7 +20,7 @@ func NewHTTPHandler(chatUseCase chat_usecase.ChatUseCase) *HTTPHandler {
 
 func (h *HTTPHandler) PostMessageHandler(w http.ResponseWriter, r *http.Request) {
 	var requestBody struct {
-		UserID int    `json:"userId"`
+		UserID int    `json:"UserId"`
 		Room   string `json:"room"`
 	}
 
@@ -36,6 +36,7 @@ func (h *HTTPHandler) PostMessageHandler(w http.ResponseWriter, r *http.Request)
 		http.Error(w, "Id is missing in parameters", http.StatusMethodNotAllowed)
 	}
 
+	//userID, _ := strconv.Atoi(requestBody.UserID)
 	err = h.ChatUseCase.PostMessage(requestBody.UserID, requestBody.Room, stockCode)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
