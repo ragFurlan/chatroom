@@ -6,7 +6,6 @@ import (
 	gateway "chatroom/internal/gateways"
 	"encoding/json"
 	"fmt"
-
 )
 
 var (
@@ -15,7 +14,7 @@ var (
 )
 
 type ChatUseCase struct {
-	UserUsecase       user_usecase.UserUseCase
+	UserUsecase       user_usecase.User
 	BotGateway        gateway.BotGateway
 	PubSubProducer    gateway.PubSubGateway
 	MessageRepository gateway.MessageGateway
@@ -27,7 +26,7 @@ type Chat interface {
 }
 
 func NewChatUseCase(botGateway gateway.BotGateway,
-	userUsecase user_usecase.UserUseCase,
+	userUsecase user_usecase.User,
 	pubSubProducer gateway.PubSubGateway,
 	messageRepository gateway.MessageGateway) *ChatUseCase {
 	return &ChatUseCase{
@@ -64,11 +63,7 @@ func (uc *ChatUseCase) PostMessage(userID int, room, stockCode string) error {
 		Room:     room,
 	}
 
-	jsonBytes, err := json.Marshal(message)
-	if err != nil {
-		return fmt.Errorf("Error transforming message into JSON: %v", err)
-	}
-
+	jsonBytes, _ := json.Marshal(message)
 	uc.PubSubProducer.Publish(room, string(jsonBytes))
 
 	return nil

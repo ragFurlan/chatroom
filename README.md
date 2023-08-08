@@ -62,7 +62,7 @@ go get github.com/stretchr/testify/assert
 ```
 ~/go/bin/mockgen -source=internal/gateways/bot_gateway.go -destination=tests/gateways/repositories/bot_gateway.go -package=repository
 ~/go/bin/mockgen -source=internal/gateways/message_gateway.go -destination=tests/gateways/repositories/message_gateway.go -package=repository
-~/go/bin/mockgen -source=internal/gateways/user_gateway.go -destination=tests/gateways/user_gateway.go -package=repository
+~/go/bin/mockgen -source=internal/gateways/user_gateway.go -destination=tests/gateways/repositories/user_gateway.go -package=repository
 ```
 
 ### **Producers**

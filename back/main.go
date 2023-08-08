@@ -1,7 +1,7 @@
 package main
 
 import (
-	"chatroom/internal/app/usecases/chat"
+	chat_usecase "chatroom/internal/app/usecases/chat"
 	userUsecase "chatroom/internal/app/usecases/user"
 	controller "chatroom/internal/controllers/http/handlers"
 	producer "chatroom/internal/gateways/producers"
@@ -15,7 +15,6 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
-
 )
 
 var (
@@ -40,7 +39,7 @@ func main() {
 	messageRepository := setRepository()
 
 	// Chat
-	chatUsecase := chat_usecase.NewChatUseCase(stockBotRepository, *userUseCase, pubSubProducer, messageRepository)
+	chatUsecase := chat_usecase.NewChatUseCase(stockBotRepository, userUseCase, pubSubProducer, messageRepository)
 
 	handlerChat = controller.NewHTTPHandler(*chatUsecase)
 	startServer()
