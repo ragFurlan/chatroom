@@ -6,6 +6,7 @@ import (
 	gateway "chatroom/internal/gateways"
 	"encoding/json"
 	"fmt"
+
 )
 
 var (
@@ -18,6 +19,11 @@ type ChatUseCase struct {
 	BotGateway        gateway.BotGateway
 	PubSubProducer    gateway.PubSubGateway
 	MessageRepository gateway.MessageGateway
+}
+
+type Chat interface {
+	PostMessage(userID int, room, stockCode string) error
+	GetMessages(room string) ([]entity.Message, error)
 }
 
 func NewChatUseCase(botGateway gateway.BotGateway,

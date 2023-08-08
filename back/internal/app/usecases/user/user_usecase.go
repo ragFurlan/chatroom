@@ -8,6 +8,10 @@ type UserUseCase struct {
 	UserGateway gateway.UserGateway
 }
 
+type User interface {
+	GetUserName(userID int) (string, error)
+}
+
 func NewUserUseCase(userGateway gateway.UserGateway) *UserUseCase {
 	return &UserUseCase{
 		UserGateway: userGateway,
