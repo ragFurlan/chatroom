@@ -19,7 +19,8 @@ export class ApiService {
     return this.http.post<Message[]>(`${this.apiUrl}/message`, body, { headers });
   }
 
-  postMessage(userId: number, room: string, message: string): Observable<void> {
+  postMessage(userId: string, room: string, message: string): Observable<void> {
+    console.log("message service: "+ message +" user: " + userId + " room: ", room)
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });    

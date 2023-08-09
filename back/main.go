@@ -23,6 +23,8 @@ var (
 )
 
 func main() {
+	log.Println("Starting server...")
+
 	urlStock := os.Getenv("URL_STOCK")
 
 	// User
@@ -49,7 +51,7 @@ func main() {
 func setRepository() *repository.MessageRepository {
 	user := os.Getenv("POSTGRES_USER")
 	password := os.Getenv("POSTGRES_PASSWORD")
-	dataSourceName := fmt.Sprintf("port=5432 host=localhost user=%s password=%s dbname=postgres sslmode=disable ", user, password)
+	dataSourceName := fmt.Sprintf("port=5432 host=db user=%s password=%s dbname=postgres sslmode=disable ", user, password)
 	db, err := sql.Open("postgres", dataSourceName)
 	if err != nil {
 		log.Fatal(err)

@@ -4,6 +4,7 @@ import (
 	entity "chatroom/internal/entities"
 	"database/sql"
 	"fmt"
+	"log"
 	"os"
 
 	_ "github.com/lib/pq"
@@ -20,6 +21,7 @@ func NewMessageRepository(db *sql.DB) *MessageRepository {
 }
 
 func (r *MessageRepository) CreateMessage(message *entity.Message) error {
+	log.Printf("service: CreateMessage - message: %v ", message)
 	m := *message
 	if m.UserName == "" || m.Message == "" || m.Room == "" {
 		return fmt.Errorf("There are fields missing")
@@ -28,12 +30,15 @@ func (r *MessageRepository) CreateMessage(message *entity.Message) error {
 	insertQuery := fmt.Sprintf("INSERT INTO messages (userName, message, room, timestamp) VALUES ('%s', '%s', '%s', CURRENT_TIMESTAMP)",
 		message.UserName, message.Message, message.Room)
 	_, err := r.db.Exec(insertQuery)
+
 	return err
 }
 
 func (r *MessageRepository) GetLatestMessages(room string, limit int) ([]entity.Message, error) {
+	log.Printf("service: GetLatestMessages - room: %v - limit: %v", room, limit)
 	rows, err := r.db.Query("SELECT id, userName, message, room, timestamp FROM messages WHERE room = $1 ORDER BY timestamp DESC LIMIT $2", room, limit)
 	if err != nil {
+		log.Printf("service: GetLatestMessages - err: %v ", err)
 		return nil, err
 	}
 	defer rows.Close()

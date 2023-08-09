@@ -20,15 +20,15 @@ var (
 	messageGateway *repository.MockMessageGateway
 	service        *ChatUseCase
 	anyError       = errors.New("Error")
+	userID         = "1"
+	userName       = "User 1"
+	stockCode      = "BA"
+	room           = "Room1"
+	value          = 100.5
 )
 
 func TestChatUseCase_PostMessage_GetUserName_Error(t *testing.T) {
 	setControllers(t)
-
-	userID := 1
-	userName := "User 1"
-	stockCode := "BA"
-	room := "Room1"
 
 	userUsecase.EXPECT().GetUserName(userID).Return(userName, anyError)
 
@@ -39,12 +39,6 @@ func TestChatUseCase_PostMessage_GetUserName_Error(t *testing.T) {
 func TestChatUseCase_PostMessage_GetStockQuote_Error(t *testing.T) {
 	setControllers(t)
 
-	userID := 1
-	userName := "User 1"
-	stockCode := "BA"
-	value := 100.5
-	room := "Room1"
-
 	userUsecase.EXPECT().GetUserName(userID).Return(userName, nil)
 	botGateway.EXPECT().GetStockQuote(stockCode).Return(value, anyError)
 
@@ -54,12 +48,7 @@ func TestChatUseCase_PostMessage_GetStockQuote_Error(t *testing.T) {
 
 func TestChatUseCase_PostMessage_GetStockQuote_Zero_Error(t *testing.T) {
 	setControllers(t)
-
-	userID := 1
-	userName := "User 1"
-	stockCode := "BA"
 	value := 0.0
-	room := "Room1"
 
 	userUsecase.EXPECT().GetUserName(userID).Return(userName, nil)
 	botGateway.EXPECT().GetStockQuote(stockCode).Return(value, nil)
@@ -71,11 +60,6 @@ func TestChatUseCase_PostMessage_GetStockQuote_Zero_Error(t *testing.T) {
 func TestChatUseCase_PostMessage_GetSubscribers_Success(t *testing.T) {
 	setControllers(t)
 
-	userID := 1
-	userName := "User 1"
-	stockCode := "BA"
-	value := 100.5
-	room := "Room1"
 	var ch []chan string
 	var chSubscriber chan string
 	message := entity.Message{
@@ -99,11 +83,6 @@ func TestChatUseCase_PostMessage_GetSubscribers_Success(t *testing.T) {
 func TestChatUseCase_PostMessage_Success(t *testing.T) {
 	setControllers(t)
 
-	userID := 1
-	userName := "User 1"
-	stockCode := "BA"
-	value := 100.5
-	room := "Room1"
 	var ch []chan string
 
 	message := entity.Message{
@@ -139,7 +118,6 @@ func TestChatUseCase_GetMessage_Success(t *testing.T) {
 func TestChatUseCase_GetMessage_GetSubscribers_Error(t *testing.T) {
 	setControllers(t)
 	var ch []chan string
-	room := "Room1"
 
 	pubSubProducer.EXPECT().GetSubscribers(room).Return(ch, false)
 
@@ -151,7 +129,6 @@ func TestChatUseCase_GetMessage_GetLatestMessages_Error(t *testing.T) {
 	setControllers(t)
 
 	var ch []chan string
-	room := "Room1"
 
 	pubSubProducer.EXPECT().GetSubscribers(room).Return(ch, true)
 	messageGateway.EXPECT().GetLatestMessages(room, 50).Return([]entity.Message{}, anyError)

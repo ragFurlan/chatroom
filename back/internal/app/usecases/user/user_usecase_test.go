@@ -20,7 +20,7 @@ func TestUserUseCase_GetUserName_Success(t *testing.T) {
 
 	service := NewUserUseCase(userGateway)
 
-	userID := 1
+	userID := "1"
 	userName := "User 1"
 
 	userGateway.EXPECT().GetUserName(userID).Return(userName, nil)
@@ -38,7 +38,7 @@ func TestUserUseCase_GetUserName_Error(t *testing.T) {
 
 	service := NewUserUseCase(userGateway)
 
-	userID := 1
+	userID := "1"
 	userName := "User 1"
 
 	userGateway.EXPECT().GetUserName(userID).Return(userName, anyError)

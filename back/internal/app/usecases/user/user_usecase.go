@@ -9,7 +9,7 @@ type UserUseCase struct {
 }
 
 type User interface {
-	GetUserName(userID int) (string, error)
+	GetUserName(userID string) (string, error)
 }
 
 func NewUserUseCase(userGateway gateway.UserGateway) *UserUseCase {
@@ -18,7 +18,7 @@ func NewUserUseCase(userGateway gateway.UserGateway) *UserUseCase {
 	}
 }
 
-func (uc *UserUseCase) GetUserName(userID int) (string, error) {
+func (uc *UserUseCase) GetUserName(userID string) (string, error) {
 	name, err := uc.UserGateway.GetUserName(userID)
 	if err != nil {
 		return "", err

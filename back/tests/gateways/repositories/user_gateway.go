@@ -34,7 +34,7 @@ func (m *MockUserGateway) EXPECT() *MockUserGatewayMockRecorder {
 }
 
 // GetUserName mocks base method.
-func (m *MockUserGateway) GetUserName(userID int) (string, error) {
+func (m *MockUserGateway) GetUserName(userID string) (string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetUserName", userID)
 	ret0, _ := ret[0].(string)

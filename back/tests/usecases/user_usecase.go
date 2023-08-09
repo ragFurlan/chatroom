@@ -34,7 +34,7 @@ func (m *MockUser) EXPECT() *MockUserMockRecorder {
 }
 
 // GetUserName mocks base method.
-func (m *MockUser) GetUserName(userID int) (string, error) {
+func (m *MockUser) GetUserName(userID string) (string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetUserName", userID)
 	ret0, _ := ret[0].(string)

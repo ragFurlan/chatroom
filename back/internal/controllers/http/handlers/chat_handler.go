@@ -3,9 +3,11 @@ package handler
 import (
 	chat_usecase "chatroom/internal/app/usecases/chat"
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
+
 )
 
 type HTTPHandler struct {
@@ -20,7 +22,7 @@ func NewHTTPHandler(chatUseCase chat_usecase.ChatUseCase) *HTTPHandler {
 
 func (h *HTTPHandler) PostMessageHandler(w http.ResponseWriter, r *http.Request) {
 	var requestBody struct {
-		UserID int    `json:"UserId"`
+		UserID string    `json:"UserId"`
 		Room   string `json:"room"`
 	}
 
@@ -30,15 +32,18 @@ func (h *HTTPHandler) PostMessageHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
+	log.Printf("service: PostMessageHandler - userID: %v ", requestBody)
+
 	vars := mux.Vars(r)
 	stockCode, ok := vars["stock_code"]
 	if !ok {
+		log.Println("service: PostMessageHandler - Id is missing in parameters")
 		http.Error(w, "Id is missing in parameters", http.StatusMethodNotAllowed)
 	}
 
-	//userID, _ := strconv.Atoi(requestBody.UserID)
-	err = h.ChatUseCase.PostMessage(requestBody.UserID, requestBody.Room, stockCode)
+	err = h.ChatUseCase.PostMessage( requestBody.UserID, requestBody.Room, stockCode)
 	if err != nil {
+		log.Printf("service: PostMessageHandler - method: PostMessage - error: %v ", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -65,8 +70,11 @@ func (h *HTTPHandler) GetMessages(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Printf("service: GetMessages - requestBody: %v ", requestBody)
+
 	messages, err := h.ChatUseCase.GetMessages(requestBody.Room)
 	if err != nil {
+		log.Printf("service: GetMessages - method: GetMessages  error: %v ", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

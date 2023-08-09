@@ -1,36 +1,26 @@
-
-
 <div class="container">
   <div class="title">CHAT ROOM</div>
   <form class="form">
-    <!-- <select class="select" [(ngModel)]="selectedUser" [ngModelOptions]="{ standalone: true }" (change)="updateMessages()">
-      <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
-    </select>
-    
-    <select class="select" [(ngModel)]="selectedRoom" [ngModelOptions]="{ standalone: true }" (change)="updateMessages()">
-      <option *ngFor="let room of rooms" [value]="room">{{ room.name }}</option>
-    </select> -->
-
-
-    <select class="select" id="userCombo" [(ngModel)]="selectedUser" [ngModelOptions]="{standalone: true}" (change)="updateMessages()">
+    <select class="select" id="roomCombo" [(ngModel)]="selectedUser" [ngModelOptions]="{standalone: true}">
       <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
     </select>    
     <select class="select" id="roomSelect" [(ngModel)]="selectedRoom" [ngModelOptions]="{ standalone: true }" (change)="updateMessages()">
       <option *ngFor="let room of rooms" [value]="room.id">{{ room.name }}</option>
-    </select>
-    <button class="button" id="updateButton" (click)="updateMessages()">Update</button>
+    </select>   
   </form>
   <div class="send-button">
     <input type="text" class="message-input" #messageInput placeholder="Enter your message...">
     <button class="button" id="sendMessageButton" (click)="sendMessage(messageInput.value)">Send</button>
-    <!-- <input type="text" class="message-input" id="messageInput" placeholder="Enter your message...">
-    <button class="button" id="sendMessageButton" (click)="sendMessage(messageInput.value)" >Send</button> -->
   </div>
-  <div class="messages">
+  <div class="messages" id=""messages>
     <ul>
       <li *ngFor="let message of formattedMessages">{{ message }}</li>
     </ul>
+  </div>
+  
+  <div class="form">
+    <button class="button" id="updateButton" (click)="updateMessages()">Update</button>
   </div>  
-  <div class="footer">
+  <div class="footer">   
   </div>
 </div>
