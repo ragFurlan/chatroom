@@ -1,4 +1,4 @@
-# gchat room
+# chat room
 
 ## Run all application with docker
 
@@ -25,13 +25,13 @@ ng serve
 
 ## Instalations
 
-### Postgres
+### Postgres tool, if necessary
 
 ```
 go get github.com/lib/pq
 ```
 
-### Install mockgen and dependencies of test, if necessary
+### Mockgen and dependencies of test, if necessary
 ```
 go install github.com/golang/mock/mockgen@v1.6.0
 go get github.com/golang/mock/gomock
