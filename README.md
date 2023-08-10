@@ -1,4 +1,4 @@
-# go-clean-architecture-template
+# gchat room
 
 ## Run all application with docker
 
