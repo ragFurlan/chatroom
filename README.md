@@ -3,6 +3,7 @@
 ## Run all application with docker
 
 ```
+docker compose build
 docker compose up
 ```
 
@@ -24,7 +25,7 @@ ng serve
 ## Path the application
 
 ```
-http://localhost:5000
+http://localhost:5000/chat
 ```
 
 ## Instalations
