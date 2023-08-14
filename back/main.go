@@ -57,7 +57,10 @@ func setRepository() *repository.MessageRepository {
 		log.Fatal(err)
 	}
 
+	log.Println("start service: setRepository - method: setRepository")
 	repository := repository.NewMessageRepository(db)
+
+	log.Println("finish service: setRepository - method: setRepository")
 	return repository
 }
 

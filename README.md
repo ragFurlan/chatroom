@@ -3,9 +3,7 @@
 ## Run all application with docker
 
 ```
-docker-compose build
-docker-compose up
-
+docker compose up
 ```
 
 ## Run application locally
@@ -21,6 +19,12 @@ go run ./back/main.go
 ```
 cd web
 ng serve
+```
+
+## Path the application
+
+```
+http://localhost:5000
 ```
 
 ## Instalations

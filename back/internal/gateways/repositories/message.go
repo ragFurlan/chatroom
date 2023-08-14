@@ -57,11 +57,18 @@ func (r *MessageRepository) GetLatestMessages(room string, limit int) ([]entity.
 }
 
 func (r *MessageRepository) createTableIfNotExists() error {
+	log.Println("start service: createTableIfNotExists")
 	sqlFile, err := os.ReadFile("./scripts/create_message.sql")
 	if err != nil {
+		log.Printf("start service: createTableIfNotExists - Error: Failed to open transaction file: %v", err)
 		return fmt.Errorf("Failed to open transaction file: %v", err)
 	}
 
 	_, err = r.db.Exec(string(sqlFile))
+	if err != nil {
+		log.Printf("start service: createTableIfNotExists - Error: Failed to exec transaction file: %v", err)
+		return fmt.Errorf("Failed to exec transaction file: %v", err)
+	}
+	log.Println("finish service: createTableIfNotExists")
 	return err
 }

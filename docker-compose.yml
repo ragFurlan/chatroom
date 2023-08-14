@@ -4,7 +4,6 @@ services:
   db:
     image: postgres:latest
     environment:
-      POSTGRES_DB: postgres
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres 
     networks:
@@ -15,7 +14,7 @@ services:
     ports:
       - 8080:8080  
     depends_on:  
-      - db
+      - db  
     environment:
       URL_STOCK: https://stooq.com/q/l/?s=%s&f=sd2t2ohlcv&h&e=csv
       POSTGRES_USER: postgres
