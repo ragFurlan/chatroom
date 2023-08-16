@@ -8,6 +8,7 @@ RUN go mod download
 COPY . .
 
 RUN go build -o /app/classroom
+RUN dos2unix wait-for-it.sh 
 COPY wait-for-it.sh /app
 
 RUN chmod +x /app/wait-for-it.sh
